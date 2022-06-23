@@ -30,10 +30,7 @@ def Returns():
 # Question 2: Regression on the first52 weeks of the stock. Store the Intercept(Alpha), Coeficient(Beta), and the standard error. 
 def question2():
     tickers = ['FDX', 'BRK', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS']
-    first52 = df[(df['Date'] <= '2000-12-22')]
-     # Might need to make a variable to subtract first52 from df to show 1000 left. 
-
-
+    first52 = df.iloc[0:52] 
 
     for t in tickers:
         model = smf.ols(f'{t} ~ SP50', data = first52).fit()
@@ -47,20 +44,20 @@ def question2():
     f'Total Observations in the Data {total_overall_observations}\n'
     f'Total Amount of Observations Left:{difference_of_observations}\n\n')
 
+
 # Question 3: Perform Rolling window regression
 def rolling_regression_stats():
     tickers = df[['FDX', 'BRK', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS']]
 
-    
-    for y in range(0, 1161):
-        for x in range(52, 1161):
-            rolling_window = df.iloc(y,x)
-            for t in tickers:
-                model = smf.ols(f'{t} ~ SP50', data= rolling_window).fit()
-                coef_and_intercept = model.params.set_axis([f'{t} Alpha', f'{t} Beta']).to_string()
-                std_error = model.bse.set_axis([f'{t} Alpha STD Err ', f'{t} Beta STD Err']).to_string()
-                print(coef_and_intercept)
-                print(std_error, '\n\n')
+    rolling_window = df
+    iterable = zip(range(1110), range(52,1162))
+    for y, x in iterable:
+        for t in tickers:
+            model = smf.ols(f'{t} ~ SP50', data= rolling_window.iloc[y:x]).fit()
+            coef_and_intercept = model.params.set_axis([f'{t} Alpha', f'{t} Beta']).to_string()
+            std_error = model.bse.set_axis([f'{t} Alpha STD Err ', f'{t} Beta STD Err']).to_string()
+            print(coef_and_intercept)
+            print(std_error, '\n\n')
         
 
 # Returns()
