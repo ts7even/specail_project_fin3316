@@ -17,6 +17,7 @@ df = pd.read_excel("dataset\Special_Assingment_Trevor_Seibert.xlsx")
 df['Date'] = pd.to_datetime(df['Date'], format='%m/%d/%y')
 tickers = ['FDX', 'BRK', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS']
 
+# print(df.head(5))
 
 # Question 1: Calculate the weekly returns of the stocks
 def Returns():
@@ -42,19 +43,25 @@ def question2():
     total_fisrts_52_obaservations = first52.shape[0]
     total_overall_observations = df.shape[0]
     difference_of_observations = (total_overall_observations - total_fisrts_52_obaservations)
-    print(f'Total Amount of Observations in the Regression: {total_fisrts_52_obaservations}\n'f'Total Amount of Observations Left:{difference_of_observations}\n\n')
+    print(f'Total Amount of Observations in the Regression: {total_fisrts_52_obaservations}\n' 
+    f'Total Observations in the Data {total_overall_observations}\n'
+    f'Total Amount of Observations Left:{difference_of_observations}\n\n')
 
 # Question 3: Perform Rolling window regression
 def rolling_regression_stats():
-    first52 = df[(df['Date'] <= '2000-12-22')]
+    tickers = df[['FDX', 'BRK', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS']]
 
-    for t in tickers:
-        model = smf.ols(f'{t} ~ SP50', data=first52).fit()
-        coef_and_intercept = model.params.set_axis(['Alpha', f'{t} Beta']).to_string()
-        std_error = model.bse.set_axis(['Alpha STD Error', f'{t} STD Error']).to_string()
-        print(coef_and_intercept)
-        print(std_error, '\n\n')
-
+    
+    for y in range(0, 1161):
+        for x in range(52, 1161):
+            rolling_window = df.iloc(y,x)
+            for t in tickers:
+                model = smf.ols(f'{t} ~ SP50', data= rolling_window).fit()
+                coef_and_intercept = model.params.set_axis([f'{t} Alpha', f'{t} Beta']).to_string()
+                std_error = model.bse.set_axis([f'{t} Alpha STD Err ', f'{t} Beta STD Err']).to_string()
+                print(coef_and_intercept)
+                print(std_error, '\n\n')
+        
 
 # Returns()
 # question2()
