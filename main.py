@@ -1,6 +1,4 @@
 # Importing Libraries 
-from operator import index
-from textwrap import indent
 from matplotlib import ticker
 import pandas as pd
 import numpy as np 
@@ -26,7 +24,7 @@ def Returns():
     tickers1 = df[['FDX', 'BRK', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS']]
     weekly_return = tickers1.pct_change(1)
     print(weekly_return) # Might need to add the dates to the data frame
-
+    weekly_return.to_csv('source\stock_returns.csv')
 
 # Question 2: Regression on the first52 weeks of the stock. Store the Intercept(Alpha), Coeficient(Beta), and the standard error. 
 def question2():
@@ -47,35 +45,32 @@ def question2():
 
 
 # Question 3: Perform Rolling window regression
-def rolling_regression_stats():
-    tickers = df[['FDX', 'BRK', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS']]
 
+def rolling_regression_stats():
+    tickers = df[['FDX', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS']]
     rolling_window = df
     iterable = zip(range(1110), range(52,1162))
+
+    total_df = pd.DataFrame()
     for y, x in iterable:
+        yx_df = pd.DataFrame({'Window': [f'{y}-{x}']})
+
         for t in tickers:
             model = smf.ols(f'{t} ~ SP50', data= rolling_window.iloc[y:x]).fit()
             beta_coef = model.params['SP50']
             std_error = model.bse['SP50']
 
+            # window_range = (f'{y}-{x}')
+            
+            res = pd.DataFrame({f'{t} Beta': beta_coef, f'{t} STDERR': std_error},index=[0])
+           
+            yx_df = pd.concat([yx_df, res], axis=1)
 
-            window_range = (f'{y}-{x}')
+        total_df = pd.concat([total_df, yx_df], axis=0, ignore_index=True)
+    print(total_df)
+    total_df.to_csv('source\stock_beta_stderr.csv')
 
-            results = pd.DataFrame({
-                "Window":window_range,
-                f"{t} Beta":beta_coef,
-                f"{t}Beta STD": std_error,
-                
-            },index=[0])
-
-    print(results)    
+Returns()
+question2()    
 rolling_regression_stats()
 
-#print(type(coef))
-
-# Returns()
-# question2()
-
-
-# coef_and_intercept = model.params.set_axis([f'{t} Alpha', f'{t} Beta']).to_string()
-            # std_error = model.bse.set_axis([f'{t} Alpha STD Err ', f'{t} Beta STD Err']).to_string()
