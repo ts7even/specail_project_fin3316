@@ -14,44 +14,18 @@ pd.set_option('display.precision', 2)
 
 df = pd.read_excel("dataset\Special_Assingment_Trevor_Seibert.xlsx") 
 df['Date'] = pd.to_datetime(df['Date'], format='%m/%d/%y')
-
-print(df.head(5))
-
-# Question 1: Calculate the weekly returns of the stocks
-def weeklyReturns():
-    print("ehllow asdo")
-
-
-
-# Question 2: Use the first 52 weeks of data points for the regression. 
-
-def question2():
-    tickers = ['FDX', 'BRK', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS']
-    first52 = df[(df['Date'] <= '2000-12-22')]
-    print(first52.shape[0], '\n\n') # Might need to make a variable to subtract first52 from df to show 1000 left. 
-
-
-
-    for t in tickers:
-        model = smf.ols(f'{t} ~ SP50', data = first52).fit()
-        print(model.summary(yname="Status", xname=['Intercept "Alpha"', f'{t} Beta'],  
-        title='Regression'))
-        print()
-
-
+tickers = ['FDX', 'BRK', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS']
 
 def rolling_reg():
-    tickers = ['FDX', 'BRK', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS']
-
-    for y in range(2001, 2022):  # 2001 through 2021
-        df_for_one_year = df[df.Date.dt.year == y]
+    model = smf.ols(f'FDX ~ SP50', data=df).fit()
+    coef_and_intercept = model.params['SP50'] # Beta
+    std_error = model.bse['SP50'] # Beta Std
+    # print(coef_and_intercept)
+    # print(std_error)
     
-        for t in tickers:
-            model = smf.ols(f'{t} ~ SP50', data=df_for_one_year).fit()
-            print(model.summary(yname="Status", xname=['Intercept', f'{t} Beta'],  
-            title=f'Regression {y}'))
-            print()
-
-# calculateReturns()
-# question2()
+    df1 = pd.DataFrame({
+        'FDX Beta': coef_and_intercept,
+        'FDX STD ERR':std_error
+    },index=[0])
+    print(df1)
 rolling_reg()

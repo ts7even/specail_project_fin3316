@@ -1,4 +1,5 @@
 # Importing Libraries 
+from operator import index
 from textwrap import indent
 from matplotlib import ticker
 import pandas as pd
@@ -54,12 +55,27 @@ def rolling_regression_stats():
     for y, x in iterable:
         for t in tickers:
             model = smf.ols(f'{t} ~ SP50', data= rolling_window.iloc[y:x]).fit()
-            coef_and_intercept = model.params.set_axis([f'{t} Alpha', f'{t} Beta']).to_string()
-            std_error = model.bse.set_axis([f'{t} Alpha STD Err ', f'{t} Beta STD Err']).to_string()
-            print(coef_and_intercept)
-            print(std_error, '\n\n')
-        
+            beta_coef = model.params['SP50']
+            std_error = model.bse['SP50']
+
+
+            window_range = (f'{y}-{x}')
+
+            results = pd.DataFrame({
+                "Window":window_range,
+                f"{t} Beta":beta_coef,
+                f"{t}Beta STD": std_error,
+                
+            },index=[0])
+
+    print(results)    
+rolling_regression_stats()
+
+#print(type(coef))
 
 # Returns()
 # question2()
-rolling_regression_stats()
+
+
+# coef_and_intercept = model.params.set_axis([f'{t} Alpha', f'{t} Beta']).to_string()
+            # std_error = model.bse.set_axis([f'{t} Alpha STD Err ', f'{t} Beta STD Err']).to_string()
