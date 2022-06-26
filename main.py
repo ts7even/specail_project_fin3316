@@ -21,7 +21,7 @@ df_returns = pd.read_csv('source\stock_returns.csv')
 
 # Question 1: Calculate the weekly returns of the stocks
 def Returns():
-    pd.options.display.float_format = '{:.2%}'.format
+    # pd.options.display.float_format = '{:.2%}'.format
     tickers1 = df[['FDX', 'BRK', 'MSFT', 'NVDA', 'INTC', 'AMD', 'JPM', 'T', 'AAPL', 'AMZN', 'GS', 'SP50']]
     weekly_return = tickers1.pct_change(1)
     print(weekly_return) # Might need to add the dates to the data frame
@@ -130,7 +130,7 @@ def portfolioConstruction():
 
 
 
-# Returns()
-question2()    
+Returns()
+# question2()    
 # rolling_regression_stats()
 # portfolioConstruction()
