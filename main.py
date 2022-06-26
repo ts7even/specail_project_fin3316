@@ -130,7 +130,7 @@ def portfolioConstruction():
 
 
 
-Returns()
+# Returns()
 # question2()    
 # rolling_regression_stats()
 # portfolioConstruction()
