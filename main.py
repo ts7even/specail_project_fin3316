@@ -59,7 +59,7 @@ def rolling_regression_stats():
             model = smf.ols(f'{t} ~ SP50', data=rolling_window.iloc[y:x]).fit()
             beta = model.params['SP50']
             alpha = model.params['Intercept']
-            std_error = model.bse['SP50']
+            std_error = model.bse['Intercept']
 
             # window_range = (f'{y}-{x}')
             

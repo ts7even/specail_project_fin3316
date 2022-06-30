@@ -12,6 +12,8 @@ import seaborn as sns
 from sklearn.linear_model import LinearRegression
 from datetime import timedelta, datetime
 
+# For Quasi Random numbers, you can use the Sobol sequence from Pytorch
+
 # Dataframe of the prices
 df = pd.read_excel("dataset\Special_Assingment_Trevor_Seibert.xlsx") 
 df['Date'] = pd.to_datetime(df['Date'], format='%m/%d/%y')
@@ -50,7 +52,7 @@ cov = df3.iloc[1058:1152].cov()*52 #Past Two Years
 '''Also, need to learn Java to create a real montecarlo simulation to find the true expected return. Also, Alpha + Expected Return (Look comment below) = Actual Expected Return'''
 expected_returns = W # To find a true expected return we need to do a probability distribution (returnA*probabilityA) +... 
 
-# Optimal Weight from Dr. Estelaei 𝑤(𝑖) =  α(i)/ 𝜎2𝑒(𝑖) (Last Part is the Standard Deviation of the Residuals.)
+# Optimal Weight from Dr. Estelaei 𝑤(𝑖) = (Alpha) α(i)/ 𝜎2𝑒(𝑖) (Last Part is the Standard Deviation of the Residuals.)
 
 def optimumPortfolio(func, W, exp_ret, cov, target_return):
     opt_bounds = Bounds(0,1)
